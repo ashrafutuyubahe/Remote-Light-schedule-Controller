@@ -5,7 +5,7 @@ import time
 print("=== IoT Light Control Subscriber ===")
 print("Initializing MQTT-Serial bridge...")
 
-# Set your serial port and baud rate
+
 try:
     ser = serial.Serial('COM5', 9600, timeout=1)
     print("✓ Serial connection established with Arduino on COM5")
@@ -18,7 +18,7 @@ except Exception as e:
     print(f"✗ Failed to connect to Arduino: {str(e)}")
     raise e
 
-# Store schedule (optional future use)
+
 schedule = {
     'on_time': None,
     'off_time': None
@@ -50,7 +50,7 @@ def handle_mqtt_command(client, userdata, msg):
     except Exception as e:
         print(f"✗ Error handling MQTT message: {str(e)}")
 
-# MQTT setup
+
 client = mqtt.Client()
 client.on_message = handle_mqtt_command
 client.on_connect = handle_mqtt_connection
@@ -58,6 +58,6 @@ client.on_connect = handle_mqtt_connection
 print("\nConnecting to MQTT broker...")
 client.connect("157.173.101.159", 1883, 60)
 
-# Start MQTT loop
+
 print("🔄 MQTT loop started. Awaiting commands...\n")
 client.loop_forever()

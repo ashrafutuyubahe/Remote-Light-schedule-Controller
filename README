@@ -72,7 +72,7 @@ This project implements a remote relay control system using MQTT protocol and We
 
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install -r my-requirements.txt
    ```
 
 3. Start the WebSocket server:

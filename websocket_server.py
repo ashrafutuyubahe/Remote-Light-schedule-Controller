@@ -6,11 +6,11 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 import threading
 from datetime import datetime
 
-# MQTT settings
-MQTT_BROKER = "157.173.101.159"
-MQTT_TOPIC = "relay/controll"  # Changed back to original topic
 
-# Serve static files
+MQTT_BROKER = "157.173.101.159"
+MQTT_TOPIC = "relay/controll" 
+
+
 class HttpHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory="static", **kwargs)
@@ -35,7 +35,7 @@ async def schedule_controller(on_time, off_time):
             publish.single(MQTT_TOPIC, payload="OFF", hostname=MQTT_BROKER)
             print("Published OFF command")
         
-        await asyncio.sleep(3)  # Check every 3 seconds
+        await asyncio.sleep(3)  
 
 async def handle_websocket(websocket):
     try:
@@ -48,7 +48,7 @@ async def handle_websocket(websocket):
             print(f"Received schedule: ON at {on_time}, OFF at {off_time}")
             
             try:
-                # Start schedule checker
+               
                 schedule_task = asyncio.create_task(schedule_controller(on_time, off_time))
                 
                 await websocket.send(json.dumps({
@@ -56,7 +56,7 @@ async def handle_websocket(websocket):
                     'message': f'Schedule set: ON at {on_time}, OFF at {off_time}'
                 }))
                 
-                # Keep checking schedule until connection closes
+                
                 await schedule_task
                 
             except Exception as e:
@@ -71,13 +71,13 @@ async def handle_websocket(websocket):
 
 async def main():
     print("Starting WebSocket server on ws://localhost:8765")
-    # Start HTTP server in a separate thread
+   
     http_thread = threading.Thread(target=run_http_server, daemon=True)
     http_thread.start()
 
-    # Start WebSocket server
+   
     async with websockets.serve(handle_websocket, "localhost", 8765):
-        await asyncio.Future()  # run forever
+        await asyncio.Future()  
 
 if __name__ == "__main__":
     asyncio.run(main())
